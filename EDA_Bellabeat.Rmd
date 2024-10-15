@@ -6,6 +6,7 @@ editor_options:
   markdown: 
     wrap: sentence
 ---
+# **¿CÓMO PUEDE HACER UNA EMPRESA DE TECNOLOGÍA PARA EL BIENESTAR TOMAR DECISIONES INTELIGENTES?**
 
 # **INTRODUCCIÓN**
 
@@ -34,10 +35,14 @@ El análisis se baso en las siguientes interrogantes:
 Para el análisis se sugirió el uso de fuentes externas y públicas de información.
 En específico para el caso se emplea el siguiente conjunto de datos:
 
-**Datos de seguimiento de actividad física de Fitbit** (CC0: Dominio público, conjunto de datos disponibles a través de Möbius)
+**Datos de seguimiento de actividad física de Fitbit** (CC0: Dominio público, conjunto de datos disponibles a través de Möbius) disponible en https://www.kaggle.com/arashnic/fitbit.
 
 Este conjunto de datos de Kaggle incluye el seguimiento de la actividad física de treinta usuarios de Fitbit.
-Treinta usuarios seleccionados de Fitbit dieron su consentimiento para compartir datos personales de seguimiento.
+Treinta usuarios seleccionados de Fitbit dieron su consentimiento para compartir datos personales de seguimiento. Con respecto a la privacidad, esta se mantiene ya que no incluye información que pueda identificar a los participantes. En cuanto a la seguridad, los datos se almacenaron en un lugar seguro.
+
+## **Credibilidad y sesgo de los datos**
+
+La credibilidad de los datos se ve afectada por varios factores, incluyendo la representatividad de la muestra, la calidad de los datos y la validez de las medidas. En este caso, la representatividad de la muestra es limitada, ya que los participantes fueron reclutados a través de Amazon Mechanical Turk, lo que puede introducir sesgos de selección. Además, la calidad de los datos puede verse afectada por la precisión de los monitores Fitbit y la fiabilidad de los informes de los participantes. Por último, la validez de las medidas puede verse afectada por la definición de las variables y la forma en que se midió.
 
 ### ***Librerías empleadas***
 
