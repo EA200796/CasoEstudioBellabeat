@@ -1,8 +1,12 @@
 ---
 title: "Análisis Exploratorio de Datos para Bellabeat"
 output:
-  html_document:
-    df_print: paged
+  html_document: 
+    keep_md: true
+  html_notebook: default
+editor_options:
+  markdown:
+    wrap: sentence
 ---
 # **¿CÓMO PUEDE HACER UNA EMPRESA DE TECNOLOGÍA PARA EL BIENESTAR TOMAR DECISIONES INTELIGENTES?**
 
@@ -44,7 +48,8 @@ La credibilidad de los datos se ve afectada por varios factores, incluyendo la r
 
 ### ***Librerías empleadas***
 
-```{r error=FALSE, warning=FALSE, message=FALSE}
+
+```r
 library(dplyr) # para usar distinct() y eliminar duplicados
 library(lubridate) # para manejar fechas y horas
 library(readr) # permite leer archivos con formato .xlsx
@@ -66,7 +71,8 @@ library(ggnewscale) # permite aplicar múltiples escalas de color dentro de un m
 
 A continuación se indica el procedimiento aplicado para subir los datos para su posterior uso.
 
-```{r}
+
+```r
 #Se crea una función personalizada para leer los archivos
 leer_archivo_csv <- function(ruta_archivo){
   # leer el archivo en un marco de datos
@@ -123,12 +129,170 @@ data_clean <- lapply(rutas_archivos, leer_archivo_csv) %>%
 
 Como primer paso de exploración de los datos se observo las diferentes columnas que disponen, con el fin de identificar como están organizados.
 
-```{r}
+
+```r
 ## Extrae los nombres de las columnas de cada dataframe en la lista data_clean para compararlos
 for (nombres_archivos in names(lapply(data_clean, names))) {
   cat("Nombres de columnas en", nombres_archivos, ":\n")
   print(lapply(data_clean, names)[[nombres_archivos]])
   cat("\n")}
+```
+
+```
+## Nombres de columnas en dailyActivity-16_03_12-16_04_11 :
+##  [1] "id"                         "activity_date"             
+##  [3] "total_steps"                "total_distance"            
+##  [5] "tracker_distance"           "logged_activities_distance"
+##  [7] "very_active_distance"       "moderately_active_distance"
+##  [9] "light_active_distance"      "sedentary_active_distance" 
+## [11] "very_active_minutes"        "fairly_active_minutes"     
+## [13] "lightly_active_minutes"     "sedentary_minutes"         
+## [15] "calories"                  
+## 
+## Nombres de columnas en dailyActivity-16_04_12-16_05_12 :
+##  [1] "id"                         "activity_date"             
+##  [3] "total_steps"                "total_distance"            
+##  [5] "tracker_distance"           "logged_activities_distance"
+##  [7] "very_active_distance"       "moderately_active_distance"
+##  [9] "light_active_distance"      "sedentary_active_distance" 
+## [11] "very_active_minutes"        "fairly_active_minutes"     
+## [13] "lightly_active_minutes"     "sedentary_minutes"         
+## [15] "calories"                  
+## 
+## Nombres de columnas en dailyCalories-16_04_12-16_05_12 :
+## [1] "id"           "activity_day" "calories"    
+## 
+## Nombres de columnas en dailyIntensities-16_04_12-16_05_12 :
+##  [1] "id"                         "activity_day"              
+##  [3] "sedentary_minutes"          "lightly_active_minutes"    
+##  [5] "fairly_active_minutes"      "very_active_minutes"       
+##  [7] "sedentary_active_distance"  "light_active_distance"     
+##  [9] "moderately_active_distance" "very_active_distance"      
+## 
+## Nombres de columnas en dailySteps-16_04_12-16_05_12 :
+## [1] "id"           "activity_day" "step_total"  
+## 
+## Nombres de columnas en heartrate_seconds-16_03_12-16_04_11 :
+## [1] "id"    "time"  "value"
+## 
+## Nombres de columnas en heartrate_seconds-16_04_12-16_05_12 :
+## [1] "id"    "time"  "value"
+## 
+## Nombres de columnas en hourlyCalories-16_03_12-16_04_11 :
+## [1] "id"            "activity_hour" "calories"     
+## 
+## Nombres de columnas en hourlyCalories-16_04_12-16_05_12 :
+## [1] "id"            "activity_hour" "calories"     
+## 
+## Nombres de columnas en hourlyIntensities-16_03_12-16_04_11 :
+## [1] "id"                "activity_hour"     "total_intensity"  
+## [4] "average_intensity"
+## 
+## Nombres de columnas en hourlyIntensities-16_04_12-16_05_12 :
+## [1] "id"                "activity_hour"     "total_intensity"  
+## [4] "average_intensity"
+## 
+## Nombres de columnas en hourlySteps-16_03_12-16_04_11 :
+## [1] "id"            "activity_hour" "step_total"   
+## 
+## Nombres de columnas en hourlySteps-16_04_12-16_05_12 :
+## [1] "id"            "activity_hour" "step_total"   
+## 
+## Nombres de columnas en minuteCaloriesNarrow-16_03_12-16_04_11 :
+## [1] "id"              "activity_minute" "calories"       
+## 
+## Nombres de columnas en minuteCaloriesNarrow-16_04_12-16_05_12 :
+## [1] "id"              "activity_minute" "calories"       
+## 
+## Nombres de columnas en minuteCaloriesWide-16_04_12-16_05_12 :
+##  [1] "id"            "activity_hour" "calories00"    "calories01"   
+##  [5] "calories02"    "calories03"    "calories04"    "calories05"   
+##  [9] "calories06"    "calories07"    "calories08"    "calories09"   
+## [13] "calories10"    "calories11"    "calories12"    "calories13"   
+## [17] "calories14"    "calories15"    "calories16"    "calories17"   
+## [21] "calories18"    "calories19"    "calories20"    "calories21"   
+## [25] "calories22"    "calories23"    "calories24"    "calories25"   
+## [29] "calories26"    "calories27"    "calories28"    "calories29"   
+## [33] "calories30"    "calories31"    "calories32"    "calories33"   
+## [37] "calories34"    "calories35"    "calories36"    "calories37"   
+## [41] "calories38"    "calories39"    "calories40"    "calories41"   
+## [45] "calories42"    "calories43"    "calories44"    "calories45"   
+## [49] "calories46"    "calories47"    "calories48"    "calories49"   
+## [53] "calories50"    "calories51"    "calories52"    "calories53"   
+## [57] "calories54"    "calories55"    "calories56"    "calories57"   
+## [61] "calories58"    "calories59"   
+## 
+## Nombres de columnas en minuteIntensitiesNarrow-16_03_12-16_04_11 :
+## [1] "id"              "activity_minute" "intensity"      
+## 
+## Nombres de columnas en minuteIntensitiesNarrow-16_04_12-16_05_12 :
+## [1] "id"              "activity_minute" "intensity"      
+## 
+## Nombres de columnas en minuteIntensitiesWide-16_04_12-16_05_12 :
+##  [1] "id"            "activity_hour" "intensity00"   "intensity01"  
+##  [5] "intensity02"   "intensity03"   "intensity04"   "intensity05"  
+##  [9] "intensity06"   "intensity07"   "intensity08"   "intensity09"  
+## [13] "intensity10"   "intensity11"   "intensity12"   "intensity13"  
+## [17] "intensity14"   "intensity15"   "intensity16"   "intensity17"  
+## [21] "intensity18"   "intensity19"   "intensity20"   "intensity21"  
+## [25] "intensity22"   "intensity23"   "intensity24"   "intensity25"  
+## [29] "intensity26"   "intensity27"   "intensity28"   "intensity29"  
+## [33] "intensity30"   "intensity31"   "intensity32"   "intensity33"  
+## [37] "intensity34"   "intensity35"   "intensity36"   "intensity37"  
+## [41] "intensity38"   "intensity39"   "intensity40"   "intensity41"  
+## [45] "intensity42"   "intensity43"   "intensity44"   "intensity45"  
+## [49] "intensity46"   "intensity47"   "intensity48"   "intensity49"  
+## [53] "intensity50"   "intensity51"   "intensity52"   "intensity53"  
+## [57] "intensity54"   "intensity55"   "intensity56"   "intensity57"  
+## [61] "intensity58"   "intensity59"  
+## 
+## Nombres de columnas en minuteMETsNarrow-16_03_12-16_04_11 :
+## [1] "id"              "activity_minute" "me_ts"          
+## 
+## Nombres de columnas en minuteMETsNarrow-16_04_12-16_05_12 :
+## [1] "id"              "activity_minute" "me_ts"          
+## 
+## Nombres de columnas en minuteSleep-16_03_12-16_04_11 :
+## [1] "id"     "date"   "value"  "log_id"
+## 
+## Nombres de columnas en minuteSleep-16_04_12-16_05_12 :
+## [1] "id"     "date"   "value"  "log_id"
+## 
+## Nombres de columnas en minuteStepsNarrow-16_03_12-16_04_11 :
+## [1] "id"              "activity_minute" "steps"          
+## 
+## Nombres de columnas en minuteStepsNarrow-16_04_12-16_05_12 :
+## [1] "id"              "activity_minute" "steps"          
+## 
+## Nombres de columnas en minuteStepsWide-16_04_12-16_05_12 :
+##  [1] "id"            "activity_hour" "steps00"       "steps01"      
+##  [5] "steps02"       "steps03"       "steps04"       "steps05"      
+##  [9] "steps06"       "steps07"       "steps08"       "steps09"      
+## [13] "steps10"       "steps11"       "steps12"       "steps13"      
+## [17] "steps14"       "steps15"       "steps16"       "steps17"      
+## [21] "steps18"       "steps19"       "steps20"       "steps21"      
+## [25] "steps22"       "steps23"       "steps24"       "steps25"      
+## [29] "steps26"       "steps27"       "steps28"       "steps29"      
+## [33] "steps30"       "steps31"       "steps32"       "steps33"      
+## [37] "steps34"       "steps35"       "steps36"       "steps37"      
+## [41] "steps38"       "steps39"       "steps40"       "steps41"      
+## [45] "steps42"       "steps43"       "steps44"       "steps45"      
+## [49] "steps46"       "steps47"       "steps48"       "steps49"      
+## [53] "steps50"       "steps51"       "steps52"       "steps53"      
+## [57] "steps54"       "steps55"       "steps56"       "steps57"      
+## [61] "steps58"       "steps59"      
+## 
+## Nombres de columnas en sleepDay-16_04_12-16_05_12 :
+## [1] "id"                   "sleep_day"            "total_sleep_records" 
+## [4] "total_minutes_asleep" "total_time_in_bed"   
+## 
+## Nombres de columnas en weightLogInfo-16_03_12-16_04_11 :
+## [1] "id"               "date"             "weight_kg"        "weight_pounds"   
+## [5] "fat"              "bmi"              "is_manual_report" "log_id"          
+## 
+## Nombres de columnas en weightLogInfo-16_04_12-16_05_12 :
+## [1] "id"               "date"             "weight_kg"        "weight_pounds"   
+## [5] "fat"              "bmi"              "is_manual_report" "log_id"
 ```
 
 Se observo que varios conjuntos de datos corresponde al mismo tipo de variable pero en un mes diferente, además, cada uno cuanto con una columna de identificación "id" y fecha que permitirá relacionarlos con mayor facilidad.
@@ -137,7 +301,8 @@ Se observo que varios conjuntos de datos corresponde al mismo tipo de variable p
 
 Para decidir como relacionar las variables del mismo tipo pero de fecha diferente se procedió a determinar la cantidad de "id" diferentes para cada conjuntos de datos con el fin de decidir la forma en que se los agrupara.
 
-```{r}
+
+```r
 data_clean %>%
   lapply(function(df) {
     list(
@@ -147,20 +312,255 @@ data_clean %>%
     })
 ```
 
+```
+## $`dailyActivity-16_03_12-16_04_11`
+## $`dailyActivity-16_03_12-16_04_11`$Registros
+## [1] 457
+## 
+## $`dailyActivity-16_03_12-16_04_11`$Voluntarios
+## [1] 35
+## 
+## 
+## $`dailyActivity-16_04_12-16_05_12`
+## $`dailyActivity-16_04_12-16_05_12`$Registros
+## [1] 940
+## 
+## $`dailyActivity-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`dailyCalories-16_04_12-16_05_12`
+## $`dailyCalories-16_04_12-16_05_12`$Registros
+## [1] 940
+## 
+## $`dailyCalories-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`dailyIntensities-16_04_12-16_05_12`
+## $`dailyIntensities-16_04_12-16_05_12`$Registros
+## [1] 940
+## 
+## $`dailyIntensities-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`dailySteps-16_04_12-16_05_12`
+## $`dailySteps-16_04_12-16_05_12`$Registros
+## [1] 940
+## 
+## $`dailySteps-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`heartrate_seconds-16_03_12-16_04_11`
+## $`heartrate_seconds-16_03_12-16_04_11`$Registros
+## [1] 1154681
+## 
+## $`heartrate_seconds-16_03_12-16_04_11`$Voluntarios
+## [1] 14
+## 
+## 
+## $`heartrate_seconds-16_04_12-16_05_12`
+## $`heartrate_seconds-16_04_12-16_05_12`$Registros
+## [1] 2483658
+## 
+## $`heartrate_seconds-16_04_12-16_05_12`$Voluntarios
+## [1] 14
+## 
+## 
+## $`hourlyCalories-16_03_12-16_04_11`
+## $`hourlyCalories-16_03_12-16_04_11`$Registros
+## [1] 24084
+## 
+## $`hourlyCalories-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`hourlyCalories-16_04_12-16_05_12`
+## $`hourlyCalories-16_04_12-16_05_12`$Registros
+## [1] 22099
+## 
+## $`hourlyCalories-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`hourlyIntensities-16_03_12-16_04_11`
+## $`hourlyIntensities-16_03_12-16_04_11`$Registros
+## [1] 24084
+## 
+## $`hourlyIntensities-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`hourlyIntensities-16_04_12-16_05_12`
+## $`hourlyIntensities-16_04_12-16_05_12`$Registros
+## [1] 22099
+## 
+## $`hourlyIntensities-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`hourlySteps-16_03_12-16_04_11`
+## $`hourlySteps-16_03_12-16_04_11`$Registros
+## [1] 24084
+## 
+## $`hourlySteps-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`hourlySteps-16_04_12-16_05_12`
+## $`hourlySteps-16_04_12-16_05_12`$Registros
+## [1] 22099
+## 
+## $`hourlySteps-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteCaloriesNarrow-16_03_12-16_04_11`
+## $`minuteCaloriesNarrow-16_03_12-16_04_11`$Registros
+## [1] 1445040
+## 
+## $`minuteCaloriesNarrow-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`minuteCaloriesNarrow-16_04_12-16_05_12`
+## $`minuteCaloriesNarrow-16_04_12-16_05_12`$Registros
+## [1] 1325580
+## 
+## $`minuteCaloriesNarrow-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteCaloriesWide-16_04_12-16_05_12`
+## $`minuteCaloriesWide-16_04_12-16_05_12`$Registros
+## [1] 21645
+## 
+## $`minuteCaloriesWide-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteIntensitiesNarrow-16_03_12-16_04_11`
+## $`minuteIntensitiesNarrow-16_03_12-16_04_11`$Registros
+## [1] 1445040
+## 
+## $`minuteIntensitiesNarrow-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`minuteIntensitiesNarrow-16_04_12-16_05_12`
+## $`minuteIntensitiesNarrow-16_04_12-16_05_12`$Registros
+## [1] 1325580
+## 
+## $`minuteIntensitiesNarrow-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteIntensitiesWide-16_04_12-16_05_12`
+## $`minuteIntensitiesWide-16_04_12-16_05_12`$Registros
+## [1] 21645
+## 
+## $`minuteIntensitiesWide-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteMETsNarrow-16_03_12-16_04_11`
+## $`minuteMETsNarrow-16_03_12-16_04_11`$Registros
+## [1] 1445040
+## 
+## $`minuteMETsNarrow-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`minuteMETsNarrow-16_04_12-16_05_12`
+## $`minuteMETsNarrow-16_04_12-16_05_12`$Registros
+## [1] 1325580
+## 
+## $`minuteMETsNarrow-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteSleep-16_03_12-16_04_11`
+## $`minuteSleep-16_03_12-16_04_11`$Registros
+## [1] 198034
+## 
+## $`minuteSleep-16_03_12-16_04_11`$Voluntarios
+## [1] 23
+## 
+## 
+## $`minuteSleep-16_04_12-16_05_12`
+## $`minuteSleep-16_04_12-16_05_12`$Registros
+## [1] 187978
+## 
+## $`minuteSleep-16_04_12-16_05_12`$Voluntarios
+## [1] 24
+## 
+## 
+## $`minuteStepsNarrow-16_03_12-16_04_11`
+## $`minuteStepsNarrow-16_03_12-16_04_11`$Registros
+## [1] 1445040
+## 
+## $`minuteStepsNarrow-16_03_12-16_04_11`$Voluntarios
+## [1] 34
+## 
+## 
+## $`minuteStepsNarrow-16_04_12-16_05_12`
+## $`minuteStepsNarrow-16_04_12-16_05_12`$Registros
+## [1] 1325580
+## 
+## $`minuteStepsNarrow-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`minuteStepsWide-16_04_12-16_05_12`
+## $`minuteStepsWide-16_04_12-16_05_12`$Registros
+## [1] 21645
+## 
+## $`minuteStepsWide-16_04_12-16_05_12`$Voluntarios
+## [1] 33
+## 
+## 
+## $`sleepDay-16_04_12-16_05_12`
+## $`sleepDay-16_04_12-16_05_12`$Registros
+## [1] 410
+## 
+## $`sleepDay-16_04_12-16_05_12`$Voluntarios
+## [1] 24
+## 
+## 
+## $`weightLogInfo-16_03_12-16_04_11`
+## $`weightLogInfo-16_03_12-16_04_11`$Registros
+## [1] 33
+## 
+## $`weightLogInfo-16_03_12-16_04_11`$Voluntarios
+## [1] 11
+## 
+## 
+## $`weightLogInfo-16_04_12-16_05_12`
+## $`weightLogInfo-16_04_12-16_05_12`$Registros
+## [1] 67
+## 
+## $`weightLogInfo-16_04_12-16_05_12`$Voluntarios
+## [1] 8
+```
+
 # **PROCESAMIENTO DE LOS DATOS**
 
 ## **Unión de dataframes del mismo tipo de variable**
 
 -   Dataframe de sueño diario
 
-```{r}
+
+```r
 sueño_diario <- data_clean$`sleepDay-16_04_12-16_05_12` %>%
     mutate(activity_day = date(mdy_hms(sleep_day)))
 ```
 
 -   Usando el "id" se unió los dataframe que corresponden a 2 meses de datos de la lista de archivos y cuyo nombre son similares.
 
-```{r}
+
+```r
 # Combinar dataframes por filas para cada conjunto de datos mensuales
 
 actividad_diaria <- bind_rows(distinct(data_clean$`dailyActivity-16_03_12-16_04_11`),
@@ -178,7 +578,8 @@ peso_informe <- bind_rows(distinct(data_clean$`weightLogInfo-16_03_12-16_04_11`)
 
 -   Dataframe uniendo variables por minuto
 
-```{r error=FALSE, message=FALSE, warning=FALSE}
+
+```r
 # Unión de los dataframe
 datos_minuto <- list(
   bind_rows(
@@ -208,7 +609,8 @@ mutate(activity_minute = mdy_hms(activity_minute),
 
 -   Dataframe uniendo variables por hora
 
-```{r error=FALSE, message=FALSE, warning=FALSE}
+
+```r
 # Unión de los dataframe
 datos_hora <- list(
   bind_rows(distinct(data_clean$`hourlyCalories-16_03_12-16_04_11`),
@@ -231,7 +633,8 @@ mutate(activity_hour = mdy_hms(activity_hour),
 
 Una vez organizados los datos se procedió a revisar datos faltantes.
 
-```{r warning=FALSE, message=FALSE}
+
+```r
 # Aplicar gg_miss_var a cada dataframe utilizando %>% y evitando la creación de nuevas variables
 list(
   actividad_diaria = actividad_diaria,
@@ -255,14 +658,62 @@ list(
       theme_minimal() +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }) %>% print()
+```
 
 ```
+## $actividad_diaria
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
+```
+## 
+## $datos_hora
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
+
+```
+## 
+## $datos_minuto
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-3.png)<!-- -->
+
+```
+## 
+## $frecuencia_cardiaca_seg
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-4.png)<!-- -->
+
+```
+## 
+## $sueño_diario
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-5.png)<!-- -->
+
+```
+## 
+## $sueño_minuto
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-6.png)<!-- -->
+
+```
+## 
+## $peso_informe
+```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-9-7.png)<!-- -->
 
 ## **Eliminación de columnas irrelevantes**
 
 Se eliminó la columna "fat" del dataframe "peso_informe" ya que en su gran mayoría los registros estaban vacíos.
 
-```{r}
+
+```r
 peso_informe <- peso_informe %>% select(-fat)
 ```
 
@@ -274,7 +725,8 @@ Una vez hecho el procesamiento de los datos se prosiguió con el análisis de la
 
 ### ***Correlación de datos***
 
-```{r warning=FALSE, message=FALSE}
+
+```r
 # Pasos vs calorías
 datos_hora %>% ggplot(aes(x = step_total, y = calories, color = average_intensity)) +
     geom_point() + geom_smooth() +
@@ -288,6 +740,8 @@ datos_hora %>% ggplot(aes(x = step_total, y = calories, color = average_intensit
   theme_minimal()
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
 Este gráfico nos indica la relación entre la cantidad de pasos y la calorías quemadas, y como la intensidad de ejercicio es un factor importante en la quema calorica.
 
 Se observo como las *personas que realizan un mayor número de pasos a alta intensidad tienden a quemar muchas más calorías* en comparación con aquellos que hacen el mismo número de pasos a una intensidad más baja.
@@ -296,7 +750,8 @@ Se observo como las *personas que realizan un mayor número de pasos a alta inte
 
 -   **Datos por Minuto/Hora** En esta parte se exploró como varían las calorías, la intensidad y los pasos minuto a minuto y hora a hora con el fin de encontrar tendencias en estos datos.
 
-```{r}
+
+```r
 datos_minuto %>% group_by(hora) %>%
   summarise(
     Calorias = mean(calories, na.rm = TRUE),
@@ -314,9 +769,12 @@ datos_minuto %>% group_by(hora) %>%
     theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 Con respecto a las horas del día en que se registran una mayor cantidad de pasos, quema de caloría he intensidad del ejercicio estos se registran alrededor del mediodía y a primeras horas de la tarde, lo que sugiere un patrón de actividad física vinculado a desplazamientos o ejercicio en horas laborales, así como indicadores de que los usuarios realizan actividades más vigorosas en estos periodos.
 
-```{r}
+
+```r
 datos_hora %>% group_by(id, fecha) %>%
     mutate(
       Calorias = calories,
@@ -336,11 +794,14 @@ datos_hora %>% group_by(id, fecha) %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
 Así mismo,se puede observar una tendencia a los largo de los diferentes días de la semana lo cual muestra que Bellabeat podría enfocar sus esfuerzos de marketing en promover el uso de sus dispositivos durante horas pico de actividad diaria, ofreciendo incentivos para que los usuarios se mantengan activos. Al demostrar como la intensidad de la actividad física se correlaciona tanto con la cantidad de pasos como la quema calórica.
 
 -   **Frecuencia cardiaca** Se analizaron datos de frecuencia cardíaca por segundo, evaluando la variabilidad de las pulsaciones a lo largo del día en relación con las calorías quemadas y la intensidad de la actividad física.
 
-```{r}
+
+```r
 frecuencia_cardiaca_seg %>%
   mutate(
     Fecha = date(mdy_hms(time)),
@@ -357,6 +818,8 @@ frecuencia_cardiaca_seg %>%
   theme_minimal()
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
 La frecuencia cardíaca muestra picos en horas de alta actividad física, lo que está en línea con el aumento de pasos e intensidad observados en los datos de actividad física. Esto refuerza la idea de que los usuarios están realizando ejercicio intenso o actividades extenuantes durante esos periodos.
 
 En base a lo cual Bellabeat podría desarrollar nuevas características en sus dispositivos para alertar a los usuarios cuando su frecuencia cardíaca está por encima de un umbral saludable durante sus entrenamientos.
@@ -365,7 +828,8 @@ En base a lo cual Bellabeat podría desarrollar nuevas características en sus d
 
 A continuación se relaciono el nivel de actividad con dos variables clave: calorías quemadas y número de pasos.
 
-```{r}
+
+```r
 actividad_diaria %>%
   mutate(Nivel = case_when(
     very_active_minutes > 60 ~ "Muy Activo",
@@ -388,9 +852,9 @@ actividad_diaria %>%
   
   facet_wrap(~ Métrica, nrow = 2, scales = "free") +
   theme_minimal()
-
-
 ```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
 Donde se observa que existe una correlación positiva entre el nivel de actividad y ambas variables (calorías quemadas y número de pasos). Las personas con mayor nivel de actividad física no solo queman más calorías, sino que también realizan más pasos.
 El gráfico ilustra claramente la diferencia significativa entre los niveles de actividad y cómo impactan en la salud física, con los niveles más altos de actividad asociados a un mayor gasto energético y un mayor movimiento físico.
@@ -399,7 +863,8 @@ Bellabeat podría aprovechar esta tendencia incentivando a las usuarias a ser m�
 
 ### ***Análisis de Indice de Masa Corporal***
 
-```{r}
+
+```r
 peso_informe <- peso_informe %>% 
   mutate(fecha =  date(mdy_hms(date)))
 
@@ -407,7 +872,8 @@ actividad_diaria <- actividad_diaria %>%
   mutate(fecha =  mdy(activity_date))
 ```
 
-```{r warning=FALSE, message=FALSE}
+
+```r
 grid.arrange(
     ggplot(data = left_join(peso_informe, actividad_diaria, by = c("id", "fecha")), aes(x = very_active_minutes, y = bmi, color = calories)) +
       geom_point() + geom_smooth() +
@@ -466,6 +932,8 @@ grid.arrange(
   )
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
 *Actividad física y IMC:* Los gráficos indican que más minutos de actividad, especialmente ligera y muy activa, tienden a estar asociados con un IMC más bajo, lo que sugiere un impacto positivo en la salud.
 En particular, la actividad ligera parece tener un efecto más constante en la reducción del IMC a medida que aumenta la cantidad de minutos.
 
@@ -479,7 +947,8 @@ Además, Bellabeat podría desarrollar funcionalidades en sus dispositivos que m
 
 ### ***Análisis de sueño***
 
-```{r}
+
+```r
 grid.arrange(
 sueño_minuto %>% distinct(id, date, .keep_all = TRUE) %>%
   mutate(
@@ -518,9 +987,12 @@ nrow = 2
 )
 ```
 
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
 Este gráfico muestra que las personas tienen un promedio constante de 7 a 8 horas de sueño por día, pero pasan más tiempo despiertas en la cama los fines de semana. Bellabeat puede aprovechar esta información creando alertas personalizadas que ayuden a mejorar la calidad del sueño, especialmente los fines de semana, y ofreciendo recomendaciones para reducir el tiempo despierto en la cama, optimizando el descanso. Esto reforzaría el enfoque de la empresa en el bienestar integral de la mujer.
 
-```{r}
+
+```r
 sueño_minuto %>% distinct(id, date, .keep_all = TRUE) %>%
   
   mutate(
@@ -541,6 +1013,8 @@ sueño_minuto %>% distinct(id, date, .keep_all = TRUE) %>%
   theme_minimal() +
   labs(fill = "Minutos")
 ```
+
+![](EDA_Bellabeat_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 Este gráfico polar indica que la mayor parte del sueño ocurre entre las 22:00 y las 6:00, alineado con un ciclo de descanso típico. Combinado con la información anterior, Bellabeat puede desarrollar funciones que optimicen la calidad del sueño dentro de este horario clave. Al ofrecer recordatorios personalizados para preparar el sueño o ajustar rutinas, especialmente los fines de semana cuando el tiempo despierto en cama aumenta, Bellabeat puede ayudar a sus usuarias a mejorar sus hábitos de descanso, promoviendo una mejor salud y bienestar.
 
